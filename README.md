@@ -7,10 +7,11 @@ A simple, elegant &amp; responsive web application for issues reporting. CityRep
 Dependencies
 ===========
 
- - bootstrap - http://getbootstrap.com
  - jQuery - http://jquery.com
+ - bootstrap - http://getbootstrap.com
  - js/bootbox.js - http://bootboxjs.com
  - js/elastic.js - http://unwrongest.com/projects/elastic
+ - js/geoPosition.js - https://github.com/estebanav/javascript-mobile-desktop-geolocation
  - js/locationpicker.js - http://logicify.github.io/jquery-locationpicker-plugin
  - js/pace.js - http://github.hubspot.com/pace/docs/welcome
  - captcha.php - http://code.google.com/p/cool-php-captcha

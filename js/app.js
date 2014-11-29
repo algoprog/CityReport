@@ -105,7 +105,9 @@ function uploadCanceled(evt) {
 
 
 function report_success(){
-	$('.location').hide();
+	$("#step4").hide();
+	$('.captcha_txt').val('');
+	$('.message').val('');
 	bootbox.dialog({
 		title: 'Επιτυχία αποστολής',
 		message: 'Η αναφορά σας στάλθηκε με επιτυχία στον αρμόδιο φορέα. Ο χρόνος που θα διαμεσολαβήσει για την επίλυσή του εξαρτάται από τη σημαντικότητα του προβλήματος.',

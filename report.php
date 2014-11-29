@@ -28,7 +28,7 @@ $date = time();
 $_SESSION['img_id'] = $date;
 
 $file = sha1($_SESSION['img_id']);
-$picture = "<img src=\"http://cityreport.cdn-cloud.appspot.com/a/$file?url=$host/image?f=$file\"/>";
+$picture = "<img src=\"$host/image?f=$file\" style=\"max-width:500px; max-height:500px;\"/>";
 
 $ip = $_SERVER['REMOTE_ADDR'];
 
@@ -68,7 +68,7 @@ else{
 	Τύπος προβλήματος: {$issues[$issue_id-1]['title']}<br/><br/>
 	Σχόλια: $message<br/><br/>
 	Τοποθεσία: $lat $lng - Προβολή στο <a href='http://maps.google.com/maps?&z=10&q=".$lat."+".$lng."&ll=".$lat."+".$lng."' target='blank'>Google Maps</a><br/><br/>
-	Φωτογραφία: $picture<br/><br/>";
+	Φωτογραφία: <br/><br/>$picture<br/><br/>";
 	
 	$email->AddAddress($issues[$issue_id-1]['email']);
 	

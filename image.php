@@ -9,7 +9,6 @@ foreach($types as $ext){
 		header('content-type: image/'.$ext);
 		$file = 'uploads/pictures/'.$_GET['f'].'.'.$ext;
 		echo file_get_contents($file);
-		unlink($file);
 	}
 }
 header('content-type: image/gif');

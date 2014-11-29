@@ -39,7 +39,7 @@ p{
 	z-index: 0;
 }
 
-.loading{
+.l_loading{
 	vertical-align: middle;
 	margin-right: 10px;
 }
@@ -53,9 +53,12 @@ p{
 }
 
 .loading{
+	z-index: 100000;
 	position: fixed;
-	top: 40%;
-	left: 40%;
+	left: 50%;
+	top: 50%;
+	margin-left: -32px;
+	margin-top: -32px;
 }
 
 .options, .pbox, .location_wait, .map, .loading{
@@ -79,16 +82,6 @@ p{
 	right: 0px;
 	width: 100%;
 	opacity: 0;
-}
-
-/* img-upload.js style */
-.singleupload {
-	width: 100px;
-	height: 100px;
-	background: url(../images/empty_bg.png) no-repeat center center;
-	background-size: 100%;
-	border:1px solid #ccc;
-	text-align: center;
 }
 
 /* pace.js style */

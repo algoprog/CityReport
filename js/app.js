@@ -5,6 +5,9 @@
 	address = ''; //street address
 	issue_id = 0; //issue id
 	
+	enabled = 1;
+	img_percent = 0;
+	
 	getLocation();
 	
 	$(".issue").click(function(){
@@ -21,31 +24,91 @@
 		$(this).val('');
 	});
 	
-	$('#uploadbox').singleupload({
-		action: 'upload',
-		inputId: 'singleupload_input',
-		btnId: 'h_upload',
-		thumbId: 'uploadbox',
-		onError: function(status, message) {
-			if(parseInt(status)!=1){
-				bootbox.alert('Υπήρξε πρόβλημα με το ανέβασμα της φωτογραφίας.');
-			}else{
-				report_success();
-			}
-		},
-		onSuccess: function(url, data) {
-			report_success();
-		}
-		/*,onProgress: function(loaded, total) {} */
-	});
-	
 });
+
+
+/*------ image upload functions ------*/
+
+function fileSelected(){
+	var count = document.getElementById('fileToUpload').files.length;
+    document.getElementById('details').innerHTML = "";
+    if($('#fileToUpload').val()!=''){
+		//for(var index = 0; index < count; index ++){
+			var file = document.getElementById('fileToUpload').files[0];
+			if(file.size>6*1024*1024){
+				bootbox.alert("Η εικόνα πρέπει να είναι το πολύ 6 MB.");
+				$('#fileToUpload').val('');
+				return;
+			}
+			var fileSize = 0;
+			if(file.size > 1024 * 1024){
+				fileSize = (Math.round(file.size * 100 / (1024 * 1024)) / 100).toString() + 'MB';
+			}else{
+				fileSize = (Math.round(file.size * 100 / 1024) / 100).toString() + 'KB';
+			}
+			document.getElementById('details').innerHTML += 'Name: ' + file.name + '<br>Size: ' + fileSize + '<br>Type: ' + file.type;
+			document.getElementById('details').innerHTML += '<p>';
+		//}
+	}
+ 
+}
+ 
+function uploadFile(){
+    var fd = new FormData();
+	var count = document.getElementById('fileToUpload').files.length;
+	//for(var index = 0; index < count; index ++){
+		var file = document.getElementById('fileToUpload').files[0];
+		fd.append('img', file);
+	//}
+	
+    var xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener("progress", uploadProgress, false);
+    xhr.addEventListener("load", uploadComplete, false);
+    xhr.addEventListener("error", uploadFailed, false);
+    xhr.addEventListener("abort", uploadCanceled, false);
+    xhr.open("POST", "upload");
+    xhr.send(fd);
+}
+
+function uploadProgress(evt){
+    if(evt.lengthComputable){
+        var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+		document.getElementById('progress').innerHTML = percentComplete.toString() + '%';
+		img_percent = percentComplete;
+		$('#slbl').html(percentComplete.toString() + '%');
+	}else{
+		document.getElementById('progress').innerHTML = 'άγνωστο';
+	}
+}
+ 
+function uploadComplete(evt){
+    var res = $.parseJSON(evt.target.responseText);
+	if(parseInt(res.status)==1){
+		report_success();
+	}else{
+		bootbox.alert('Υπήρξε πρόβλημα με το ανέβασμα της φωτογραφίας.');
+	}
+	enabled = 1;
+	$('#slbl').html('Αναφορά');
+}
+
+function uploadFailed(evt) {
+    bootbox.alert('Υπήρξε πρόβλημα με το ανέβασμα της φωτογραφίας.');
+}
+
+function uploadCanceled(evt) {
+    bootbox.alert('Το ανέβασμα της φωτογραφίας ακυρώθηκε.');
+}
+
+/*------ end image upload functions ------*/
+
+
 
 function report_success(){
 	$('.location').hide();
 	bootbox.dialog({
 		title: 'Επιτυχία αποστολής',
-		message: 'Η αναφορά σας στάλθηκε με επιτυχία στον αρμόδιο φορέα.',
+		message: 'Η αναφορά σας στάλθηκε με επιτυχία στον αρμόδιο φορέα. Ο χρόνος που θα διαμεσολαβήσει για την επίλυσή του εξαρτάται από τη σημαντικότητα του προβλήματος.',
 		buttons: {
 			success: {
 				label: "Τέλος",
@@ -187,15 +250,18 @@ function change_captcha(){
 }
 
 function change_button(title, click_event, icon){
-	$("#next").html('<button type="button" id="report" class="btn btn-default mtext" onclick="'+click_event+'">'+title+' <span class="vmiddle glyphicon glyphicon'+icon+'" aria-hidden="true"></span></button>');
+	$("#next").html('<button type="button" id="report" class="btn btn-default mtext" onclick="'+click_event+'"><span id="slbl">'+title+'</span> <span class="vmiddle glyphicon glyphicon'+icon+'" aria-hidden="true"></span></button>');
 }
 
 function send_image(){
-	$('.location').fadeIn(500);
-	h_upload.click();
+	$('#slbl').html('Uploading...');
+	uploadFile();
 }
 
 function report(){
+	if(!enabled) return;
+	enabled = 0;
+	$('#slbl').html('Περιμένετε...');
 	message = encodeURIComponent($('.message').val());
 	$.ajax({
 		method: "POST",
@@ -203,8 +269,12 @@ function report(){
 		url: "report",
 		data: "lat="+lat+"&lng="+lng+"&address="+encodeURIComponent(address)+"&issue_id="+issue_id+"&message="+message+"&captcha="+$('.captcha_txt').val(),
 		success: function(res){
-			if(res.msg!='ok') bootbox.alert(res.msg);
-			else if($('#singleupload_input').val()!='') send_image();
+			if($('#fileToUpload').val()!='' && res.msg=='ok') send_image();
+			else if(res.msg!='ok'){
+				$('#slbl').html('Αναφορά');
+				bootbox.alert(res.msg);
+				enabled = 1;
+			}
 			else report_success();
 			
 			if(res.msg=='Παρακαλώ εισάγετε το σωστό κείμενο captcha.'){

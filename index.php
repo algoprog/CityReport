@@ -28,7 +28,6 @@ include('includes/config.php');
 <script src="js/bootbox.js"></script>
 <script src="js/elastic.js"></script>
 <script src="js/geoPosition.js"></script>
-<script src="js/img-upload.js"></script>
 <script src="js/app.js"></script>
 
 <link rel="stylesheet" href="css/app.css">
@@ -56,11 +55,9 @@ include('includes/config.php');
 
 <div class="location_wait">
 <p><img class="location img-responsive" src="images/location.png"/></p>
-<p><img class="loading" src="images/throbber.gif"/><span class="location_msg">Αναμονή για τοποθεσία...</span></p>
+<p><img class="l_loading" src="images/throbber.gif"/><span class="location_msg">Αναμονή για τοποθεσία...</span></p>
 <p></p>
 </div>
-
-<img class="loading" src="images/throbber.gif"/>
 
 <div class="map"></div>
 
@@ -99,9 +96,14 @@ include('includes/config.php');
   </div>
 	<div class="panel-body">
 		<div class="form-group">
-			<div id="h_upload" style="display:none;"></div>
-			<div id="uploadbox" onClick="singleupload_input.click();" class="singleupload"></div>
-			<input type="file" id="singleupload_input" style="display:none;" name="img" value="" accept="image/*" capture="camera"/>
+			<form id="form1" enctype="multipart/form-data" method="post" action="upload">
+				<div>
+					<label for="fileToUpload">Τραβήξτε ή επιλέξτε φωτογραφία...</label><br />
+					<input type="file" name="fileToUpload" id="fileToUpload" onchange="fileSelected();" accept="image/*" capture="camera" />
+				</div>
+				<div id="details"></div>
+				<div id="progress"></div>
+			</form>
 		</div>
   	</div>
 </div>
@@ -127,7 +129,7 @@ include('includes/config.php');
 		<button type="button" class="btn btn-default mtext" onclick="window.location.reload();"><span class="vmiddle glyphicon glyphicon-map-marker" aria-hidden="true"></span>&nbsp; Εντοπισμός</button>
 	</div>
 	<div class="btn-group" id="next">
-		<button type="button" id="report" class="btn btn-default mtext" onclick="show_issues();">Επόμενο <span class="vmiddle glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
+		<button type="button" id="report" class="btn btn-default mtext" onclick="show_issues();"><span id="slbl">Επόμενο</span> <span class="vmiddle glyphicon glyphicon-chevron-right" aria-hidden="true"></span></button>
 	</div>
 </div>
 </div>

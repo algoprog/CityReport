@@ -41,10 +41,10 @@ elseif($lat>90||$lat<0){
 elseif($lng>180||$lng<-180){
 	msg('Μη έγκυρο γεωγραφικό μήκος.');
 }
-elseif(empty($address)||strlen($address)>100){
+elseif(empty($address)||mb_strlen($address)>100){
 	msg('Η διεύθυνση πρέπει να είναι 1-100 χαρακτήρες.');
 }
-elseif(strlen($message)>500){
+elseif(mb_strlen($message)>500){
 	msg('Tο μήνυμα δεν πρέπει να ξεπερνάει τους 500 χαρακτήρες.');
 }
 elseif($issue_id>count($issues)||$issue_id<1){

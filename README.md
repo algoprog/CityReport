@@ -4,6 +4,15 @@ CityReport
 A simple, elegant &amp; responsive web application for issues reporting. CityReport was created during a hackathon in Thessaloniki to help the residents report any issue at their location in no time. It uses HTML5 Geolocation and Google Maps API to find the user's position.
 
 
+Features
+===========
+ - HTML5 Geolocation with mobile support
+ - Admin panel for issues and issue types management
+ - Report issue type with optional comments and picture upload
+ - Picture upload is optimized for mobile devices
+ - Responsive UI that looks cool on all devices
+
+
 Install
 ===========
 Requirements

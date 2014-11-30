@@ -75,7 +75,10 @@ else{
 			Τοποθεσία: $lat $lng - Προβολή στο <a href='http://maps.google.com/maps?&z=10&q=".$lat."+".$lng."&ll=".$lat."+".$lng."' target='blank'>Google Maps</a><br/><br/>
 			Φωτογραφία: <br/><br/>$picture<br/><br/>";
 	
-	$email->AddAddress($issues[$issue_id-1]['email']);
+	$query = mysql_query("SELECT email FROM issue_types WHERE id = '$issue_id';");
+	$data = mysql_fetch_assoc($query);
+	
+	$email->AddAddress($data['email']);
 	
 	$email->Send();
 	

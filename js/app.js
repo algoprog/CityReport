@@ -165,7 +165,7 @@ function getAddress(){ //get near street address...
 		dataType: "json",
 		url: "http://maps.google.com/maps/api/geocode/json?latlng="+lat+","+lng+"&sensor=false&region=gr",
 		success: function(res){
-			if(res.results){
+			if(res.results.length>0){
 				var city = res.results[1].address_components[4].short_name;
 				if(city!='Θεσσαλονίκη' && city!='Thessaloniki'){
 					geo_error_callback();
@@ -179,7 +179,18 @@ function getAddress(){ //get near street address...
 					bootbox.alert("Η εντοπισμένη θέση σας είναι κοντά σε <b>"+address+"</b><br/><br/>Σε περίπτωση που δεν είναι σωστή μετακινήστε τον δείκτη του χάρτη στην κατάλληλη θέση ή κάντε αναζήτηση.");
 					show_map(17);
 				}
+			}else{
+				if(address=='') address = 'Άγνωστο';
+				bootbox.hideAll();
+				bootbox.alert("Η θέση σας προσδιορίστηκε.<br/><br/>Σε περίπτωση που δεν είναι σωστή μετακινήστε τον δείκτη του χάρτη στην κατάλληλη θέση ή κάντε αναζήτηση.");
+				show_map(17);
 			}
+		},
+		error: function(){
+			if(address=='') address = 'Άγνωστο';
+			bootbox.hideAll();
+			bootbox.alert("Η θέση σας προσδιορίστηκε.<br/><br/>Σε περίπτωση που δεν είναι σωστή μετακινήστε τον δείκτη του χάρτη στην κατάλληλη θέση ή κάντε αναζήτηση.");
+			show_map(17);
 		}
 	});
 }
@@ -194,6 +205,9 @@ function show_map(map_zoom){
 		onchanged: function(currentLocation, radius, isMarkerDropped){
 			lat = currentLocation.latitude;
 			lng = currentLocation.longitude;
+			var addressComponents = $(this).locationpicker('map').location.addressComponents;
+			if($(this).locationpicker('map').location.formattedAddress) address = $(this).locationpicker('map').location.formattedAddress;
+			else address = addressComponents.addressLine1;
 		},
 		inputBinding: {
 			locationNameInput: $('.search_txt')

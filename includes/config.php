@@ -4,13 +4,21 @@ error_reporting(0);
 session_start();
 mb_internal_encoding("UTF-8");
 
-$host = 'http://algoprog.com/cityreport';
+/*------ Configuration start ------*/
 
-$issues = array(
-	array('title'=>'Πυρκαγιά','email'=>'test1@gmail.com'),
-	array('title'=>'Τροχαίο ατύχημα','email'=>'test2@algoprog.com'),
-	array('title'=>'Δεν υπάρχουν κάδοι','email'=>'test3@algoprog.com'),
-	array('title'=>'Άλλο πρόβλημα','email'=>'test4@algoprog.com')
-);
+$host = 'http://algoprog.com/cityreport';
+$db_host = 'localhost';
+$db_user = 'root';
+$db_pass = '';
+$db_name = 'cityreport';
+define('ADMIN_USER', 'admin');
+define('ADMIN_PASS', '123');
+define('PATH',$_SERVER['DOCUMENT_ROOT'].'/cityreport');
+
+/*------ Configuration end ------*/
+
+mysql_connect($db_host, $db_user, $db_pass) or die('MySQL connection error.');
+mysql_select_db($db_name);
+mysql_query("SET names 'utf8'");
 
 ?>

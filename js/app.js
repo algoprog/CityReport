@@ -7,6 +7,7 @@
 	
 	enabled = 1;
 	img_percent = 0;
+	pic = 0;
 	
 	getLocation();
 	
@@ -262,6 +263,7 @@ function send_image(){
 
 function report(){
 	if(!enabled) return;
+	if($('#fileToUpload').val()!='') pic = 1;
 	enabled = 0;
 	$('#slbl').html('Περιμένετε...');
 	message = encodeURIComponent($('.message').val());
@@ -269,7 +271,7 @@ function report(){
 		method: "POST",
 		dataType: "json",
 		url: "report",
-		data: "lat="+lat+"&lng="+lng+"&address="+encodeURIComponent(address)+"&issue_id="+issue_id+"&message="+message+"&captcha="+$('.captcha_txt').val(),
+		data: "lat="+lat+"&lng="+lng+"&address="+encodeURIComponent(address)+"&issue_id="+issue_id+"&message="+message+"&captcha="+$('.captcha_txt').val()+"&pic="+pic,
 		success: function(res){
 			if($('#fileToUpload').val()!='' && res.msg=='ok') send_image();
 			else if(res.msg!='ok'){

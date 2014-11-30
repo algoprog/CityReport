@@ -1,7 +1,7 @@
 ﻿<?php
 
 include('includes/config.php');
-include('includes/phpmailer.php');
+include('includes/classes/phpmailer.class.php');
 
 header('Content-type: application/json');
 
@@ -19,18 +19,17 @@ $address = htmlspecialchars($_POST['address']);
 
 $message = urldecode(htmlspecialchars($_POST['message']));
 
-if($message==''){
-	$message = '-';
-}
-
 $date = time();
 
-$_SESSION['img_id'] = $date;
-
-$file = sha1($_SESSION['img_id']);
-$picture = "<img src=\"$host/image?f=$file\" style=\"max-width:500px; max-height:500px;\"/>";
+if($_POST['pic']){
+	$_SESSION['img_id'] = $date;
+	$file = sha1($_SESSION['img_id']);
+	$picture = "<img src=\"$host/image?f=$file\" style=\"max-width:500px; max-height:500px;\"/>";
+}
 
 $ip = $_SERVER['REMOTE_ADDR'];
+
+$query = mysql_query("SELECT * FROM issue_types WHERE id = '$issue_id';");
 
 if(empty($lat)||empty($lng)){
 	msg('Δεν έχει οριστεί τοποθεσία.');
@@ -47,28 +46,34 @@ elseif(empty($address)||mb_strlen($address)>100){
 elseif(mb_strlen($message)>500){
 	msg('Tο μήνυμα δεν πρέπει να ξεπερνάει τους 500 χαρακτήρες.');
 }
-elseif($issue_id>count($issues)||$issue_id<1){
+elseif(mysql_num_rows($query)==0){
 	msg('Μη έγκυρο id προβλήματος.');
 }
-elseif(trim(strtolower($_POST['captcha']))!=$_SESSION['captcha']){
+elseif(trim(strtolower($_POST['captcha']))!=$_SESSION['captcha']||empty($_SESSION['captcha'])){
 	msg('Παρακαλώ εισάγετε το σωστό κείμενο captcha.');
 }
 else{
+	mysql_query("INSERT INTO issues SET issue_id = '$issue_id', lat = '$lat', lng = '$lng', address = '$address', message = '$message', date = '$date', picture = '$file', ip = '$ip';");
+
+	if($message==''){
+		$message = '-';
+	}
+	
 	$email = new PHPMailer();
 	$email->From      = 'noreply@algoprog.com';
 	$email->FromName  = 'CityReport';
-	$email->Subject   = $issues[$issue_id-1]['title'].' - CityReport';
+	$email->Subject   = $data['title'].' - CityReport';
 	$email->isHTML(true);
 	
 	$date = gmdate("Y-m-d\TH:i:s\Z", $date);
 	
 	$email->Body      = 
-	"<h2>Ειδοποίηση από CityReport</h2>
-	Ημερομηνία: $date<br/><br/>
-	Τύπος προβλήματος: {$issues[$issue_id-1]['title']}<br/><br/>
-	Σχόλια: $message<br/><br/>
-	Τοποθεσία: $lat $lng - Προβολή στο <a href='http://maps.google.com/maps?&z=10&q=".$lat."+".$lng."&ll=".$lat."+".$lng."' target='blank'>Google Maps</a><br/><br/>
-	Φωτογραφία: <br/><br/>$picture<br/><br/>";
+			"<h2>Ειδοποίηση από CityReport</h2>
+			Ημερομηνία: $date<br/><br/>
+			Τύπος προβλήματος: {$data['title']}<br/><br/>
+			Σχόλια: $message<br/><br/>
+			Τοποθεσία: $lat $lng - Προβολή στο <a href='http://maps.google.com/maps?&z=10&q=".$lat."+".$lng."&ll=".$lat."+".$lng."' target='blank'>Google Maps</a><br/><br/>
+			Φωτογραφία: <br/><br/>$picture<br/><br/>";
 	
 	$email->AddAddress($issues[$issue_id-1]['email']);
 	

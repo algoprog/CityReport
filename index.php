@@ -69,10 +69,9 @@ include('includes/config.php');
   <div class="panel-body">
 	<div class="list-group">
 		<?php
-			$id = 0;
-			foreach($issues as $issue){
-				$id++;
-				echo '<a href="#" class="list-group-item issue" iid="'.$id.'">'.$issue['title'].'</a>';
+			$query = mysql_query("SELECT * FROM issue_types;");
+			while($data = mysql_fetch_assoc($query)){
+				echo '<a href="#" class="list-group-item issue" iid="'.$data['id'].'">'.$data['title'].'</a>';
 			}
 		?>
 	</div>

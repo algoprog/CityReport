@@ -4,6 +4,17 @@ CityReport
 A simple, elegant &amp; responsive web application for issues reporting. CityReport was created during a hackathon in Thessaloniki to help the residents report any issue at their location in no time. It uses HTML5 Geolocation and Google Maps API to find the user's position.
 
 
+Install
+===========
+Requirements
+1) A server running PHP & MySQL
+2) Make sure uploads/pictures is writable
+
+Instructions
+1) Edit includes/config.php
+2) Import install/cityreport.sql to your database
+
+
 Dependencies
 ===========
 

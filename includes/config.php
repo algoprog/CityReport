@@ -14,7 +14,7 @@ $db_name = 'cityreport';
 define('ADMIN_USER', 'admin');
 define('ADMIN_PASS', '1qw23e');
 define('PATH',$_SERVER['DOCUMENT_ROOT'].'/cityreport');
-date_default_timezone_set("Europe/Athens");
+ini_set('date.timezone', 'Europe/Athens');
 
 /*------ Configuration end ------*/
 

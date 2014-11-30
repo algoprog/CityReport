@@ -25,6 +25,7 @@ if(!$logged){
 	}elseif($_POST['type_id']){
 		$tid = intval($_POST['type_id']);
 		mysql_query("DELETE FROM issue_types WHERE id = '$tid';");
+		mysql_query("DELETE FROM issues WHERE issue_id = '$tid';");
 	}elseif($_POST['issue_id']){
 		$iid = intval($_POST['issue_id']);
 		$query = mysql_query("SELECT picture FROM issues WHERE id = '$iid';");

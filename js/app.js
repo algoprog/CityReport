@@ -167,7 +167,8 @@ function getAddress(){ //get near street address...
 		success: function(res){
 			if(res.results.length>0){
 				var city = res.results[1].address_components[4].short_name;
-				if(city!='Θεσσαλονίκη' && city!='Thessaloniki'){
+				var city2 = res.results[1].address_components[3].short_name;
+				if(city!='Θεσσαλονίκη' && city!='Thessaloniki' && city2!='Θεσσαλονίκη' && city2!='Thessaloniki'){
 					geo_error_callback();
 					address = 'Thessaloniki, Greece';
 					lat = 40.6171048;

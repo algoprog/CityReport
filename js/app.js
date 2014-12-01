@@ -232,6 +232,7 @@ function show_search_form(){
 function show_issues(){
 	$(".map").hide();
 	$(".search").hide();
+	$(".search_box").css({'opacity':0});
 	$("#step1").fadeIn(200);
 	change_button('Επόμενο','show_msg_form();','-chevron-right');
 	bootbox.alert("Παρακαλώ επιλέξτε έναν τύπο προβλήματος.");
